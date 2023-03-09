@@ -19,5 +19,6 @@ namespace SamuraiApp.Domain
 
         public Clan Clan { get; set; } 
         public List<SamuraiBattle> SamuraiBattles { get; set; }
+        public Horse Horse { get; set; }
     }
 } 

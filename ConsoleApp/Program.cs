@@ -13,8 +13,7 @@ namespace ConsoleApp
 
         private static void Main(string[] args)
         {
-            context.Database.EnsureCreated();
-            GetSamurais("Before Add:");
+            
             AddSamurai();
             GetSamurais("After Add:"); 
             Console.Write("Press any key...");
@@ -23,8 +22,9 @@ namespace ConsoleApp
 
         private static void AddSamurai()
         {
+            var horse = new Horse { Name = "pferd" };
             var clan = new Clan { ClanName = "shi clan" };
-            var samurai = new Samurai { Name = "Hafsa" , Clan = clan };
+            var samurai = new Samurai { Name = "Lekbedbed" , Clan = clan, Horse=horse};
             context.Samurais.Add(samurai);
             context.SaveChanges();
         }
