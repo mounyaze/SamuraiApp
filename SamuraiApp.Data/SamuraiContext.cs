@@ -2,15 +2,24 @@
 using SamuraiApp.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SamuraiApp.Data
 {
-    internal class SamuraiContext : DbContext
+    public class SamuraiContext : DbContext
     {
-        DbSet<Samurai> Samurais { get; set; }
+        public DbSet<Samurai> Samurais { get; set; }
+        public DbSet<Quote> Quotes { get; set; }
+        public DbSet<Clan> Clans { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = SamuraiAppData");
+        }
+
 
     }
 }
