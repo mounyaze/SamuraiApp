@@ -20,7 +20,8 @@ namespace ConsoleApp
             //InsertMultipleSamurais();
             //QueryFilter();
             //RetrieveAndUpdateSamurai();
-            RetrieveAndUpdateMultupleSamurais();
+            //RetrieveAndUpdateMultupleSamurais();
+            RetrieveAndDeleteASamurai();
 
             
             Console.Write("Press any key...");
@@ -98,6 +99,13 @@ namespace ConsoleApp
             var clan = new Clan { ClanName = "shi clan 3awd" };
             var horse = new Horse { Name = "horsu" };
             _context.Samurais.Add(new Samurai { Name = "Kikuchiyo", Clan= clan , Horse=horse});
+            _context.SaveChanges();
+        }
+        private static void RetrieveAndDeleteASamurai()
+        {
+            var samurai = _context.Samurais.Find(2);
+            
+            _context.Samurais.Remove(samurai);
             _context.SaveChanges();
         }
     }
