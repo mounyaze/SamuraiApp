@@ -30,7 +30,8 @@ namespace SamuraiApp.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseLoggerFactory(ConsoleLoggerFactory).EnableSensitiveDataLogging()
+                .UseLoggerFactory(ConsoleLoggerFactory)
+                .EnableSensitiveDataLogging()
                 .UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=SamuraAppData;Trusted_Connection=True;TrustServerCertificate=true;") ;
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

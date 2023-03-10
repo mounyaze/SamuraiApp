@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
 using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
@@ -9,16 +10,18 @@ namespace ConsoleApp
 {
     internal class Program
     {
-        private static SamuraiContext context = new SamuraiContext();
+        private static SamuraiContext _context = new SamuraiContext();
 
         private static void Main(string[] args)
         {
 
             // AddSamurai();
             //GetSamurais("After Add:");
-            InsertMultipleSamurais();
+            //InsertMultipleSamurais();
+            QueryFilter();
             Console.Write("Press any key...");
             Console.ReadKey();
+            
         }
 
         private static void InsertMultipleSamurais()
@@ -33,31 +36,40 @@ namespace ConsoleApp
             var samurai2 = new Samurai { Name = "Hbiba", Clan = clan1, Horse = horse2 };
             var horse3 = new Horse { Name = "ein sehr schon pferd" };
             var samurai3 = new Samurai { Name = "Mama", Clan = clan1, Horse = horse2 };
-            context.AddRange(samurai, samurai1, samurai2, samurai3);
-            context.SaveChanges();
+            _context.AddRange(samurai, samurai1, samurai2, samurai3);
+            _context.SaveChanges();
         }
         private static void AddSamurai()
         {
             var horse = new Horse { Name = "pferd" };
             var clan = new Clan { ClanName = "shi clan" };
             var samurai = new Samurai { Name = "Lekbedbed", Clan = clan, Horse = horse };
-            context.Samurais.Add(samurai);
-            context.SaveChanges();
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
         }
         private static void GetSamuraisSimpler() 
         {
             //var samurais = context.Samurais.ToList();
-            var query = context.Samurais;
-            var samurais = query.ToList();
+            var query = _context.Samurais;
+            //var samurais = query.ToList();
+            foreach (var samurai in query) 
+            {
+            Console.WriteLine(samurai.Name);
+            }
         }
         private static void GetSamurais(string text)
         {
-            var samurais = context.Samurais.ToList();
+            var samurais = _context.Samurais.ToList();
             Console.WriteLine($"{text}: Samurai count is {samurais.Count}");
             foreach (var samurai in samurais)
             {
                 Console.WriteLine(samurai.Name);
             }
+        }
+        private static void QueryFilter() 
+        {
+            var name = "Lekbedbed";
+            var samurais = _context.Samurais.Where(s =>EF.Functions.Like(s.Name,"L%")).ToList();
         }
     }
 }
