@@ -18,7 +18,11 @@ namespace ConsoleApp
             // AddSamurai();
             //GetSamurais("After Add:");
             //InsertMultipleSamurais();
-            QueryFilter();
+            //QueryFilter();
+            //RetrieveAndUpdateSamurai();
+            RetrieveAndUpdateMultupleSamurais();
+
+            
             Console.Write("Press any key...");
             Console.ReadKey();
 
@@ -76,10 +80,24 @@ namespace ConsoleApp
             var last = _context.Samurais.OrderBy(s => s.Id).LastOrDefault(s => s.Name == name);
         }
 
-        private static void RtrieveAndUpdateSamurai ()
+        private static void RetrieveAndUpdateSamurai ()
         {
+            var horse = new Horse { Name = "aserdun" };
             var samurai = _context.Samurais.FirstOrDefault();
-            samurai.Name += "Hafsa";
+            samurai.Name += "richard";
+            samurai.Horse = horse;
+
+            _context.SaveChanges();
+        }
+        private static void RetrieveAndUpdateMultupleSamurais()
+        {
+            //var samurais = _context.Samurais.Skip(1).Take(7).ToList();
+            //samurais.ForEach(s => s.Name += " san");
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += " sama";
+            var clan = new Clan { ClanName = "shi clan 3awd" };
+            var horse = new Horse { Name = "horsu" };
+            _context.Samurais.Add(new Samurai { Name = "Kikuchiyo", Clan= clan , Horse=horse});
             _context.SaveChanges();
         }
     }
