@@ -21,7 +21,7 @@ namespace ConsoleApp
             QueryFilter();
             Console.Write("Press any key...");
             Console.ReadKey();
-            
+
         }
 
         private static void InsertMultipleSamurais()
@@ -47,14 +47,14 @@ namespace ConsoleApp
             _context.Samurais.Add(samurai);
             _context.SaveChanges();
         }
-        private static void GetSamuraisSimpler() 
+        private static void GetSamuraisSimpler()
         {
             //var samurais = context.Samurais.ToList();
             var query = _context.Samurais;
             //var samurais = query.ToList();
-            foreach (var samurai in query) 
+            foreach (var samurai in query)
             {
-            Console.WriteLine(samurai.Name);
+                Console.WriteLine(samurai.Name);
             }
         }
         private static void GetSamurais(string text)
@@ -66,10 +66,21 @@ namespace ConsoleApp
                 Console.WriteLine(samurai.Name);
             }
         }
-        private static void QueryFilter() 
+        private static void QueryFilter()
         {
             var name = "Lekbedbed";
-            var samurais = _context.Samurais.Where(s =>EF.Functions.Like(s.Name,"L%")).ToList();
+            //var samurais = _context.Samurais.FirstOrDefault(s => s.Name==name);
+            //var samurais = _context.Samurais.Find(2);
+            //var filter = "J%";
+            //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, filter));
+            var last = _context.Samurais.OrderBy(s => s.Id).LastOrDefault(s => s.Name == name);
+        }
+
+        private static void RtrieveAndUpdateSamurai ()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += "Hafsa";
+            _context.SaveChanges();
         }
     }
 }
