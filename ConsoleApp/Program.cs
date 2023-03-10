@@ -22,8 +22,10 @@ namespace ConsoleApp
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultupleSamurais();
             //RetrieveAndDeleteASamurai();
-           //InsertBattle();
-            QueryAndUpdateBattle_Disconnected();
+            //InsertBattle();
+            //QueryAndUpdateBattle_Disconnected();
+            //InsertNewSamuraiWithQuotes();
+            InsertSamuraiWithManyQuotes();
             
             Console.Write("Press any key...");
             Console.ReadKey();
@@ -129,6 +131,46 @@ namespace ConsoleApp
                 newContextInstance.Battles.Update(battle);
                 newContextInstance.SaveChanges();
             }
+        }
+        private static void InsertNewSamuraiWithQuotes()
+        {
+            var clan = new Clan { ClanName = "konoha" };
+            var horse = new Horse { Name = "kurama" };
+            var samurai = new Samurai
+            {
+                Name = "Mounya Zekraoui",
+                Clan = clan,
+                Horse = horse,
+                Quotes= new List<Quote> { 
+                    new Quote {Text="Nari u nsheddek naklek"} 
+                }
+            };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
+        }
+        private static void InsertSamuraiWithManyQuotes()
+        {
+            var clan = new Clan { ClanName = "bahuba" };
+            var horse = new Horse { Name = "cherry" };
+            var samurai = new Samurai
+            {
+                Name = "Hafsa Mehdioui",
+                Clan = clan,
+                Horse = horse,
+                Quotes = new List<Quote> {
+                    new Quote {Text="yal medlula"},
+                    new Quote {Text="narii mounya crushi galiya salam"}
+                }
+            };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
+
+        }
+        private static void AddQuoteToExistingSamuraiWhileTracked()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Quotes.Add(new Quote { Text = "hey there please keep me !!" });
+            _context.SaveChanges();
         }
     }
 }
