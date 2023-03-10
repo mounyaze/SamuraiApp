@@ -21,8 +21,9 @@ namespace ConsoleApp
             //QueryFilter();
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultupleSamurais();
-            RetrieveAndDeleteASamurai();
-
+            //RetrieveAndDeleteASamurai();
+           //InsertBattle();
+            QueryAndUpdateBattle_Disconnected();
             
             Console.Write("Press any key...");
             Console.ReadKey();
@@ -107,6 +108,27 @@ namespace ConsoleApp
             
             _context.Samurais.Remove(samurai);
             _context.SaveChanges();
+        }
+        private static void InsertBattle()
+        {
+            _context.Battles.Add(new Battle
+            {
+                Name = "Battle of PFE",
+                StatDate = new DateTime(2023, 03, 01),
+                EndDate = new DateTime(2023, 07, 31)
+            });
+            _context.SaveChanges();
+        }
+        private static void QueryAndUpdateBattle_Disconnected()
+        
+        { 
+            var battle = _context.Battles.AsNoTracking().FirstOrDefault();
+            battle.EndDate = new DateTime(2024, 05, 12);
+            using (var newContextInstance = new SamuraiContext())
+            {
+                newContextInstance.Battles.Update(battle);
+                newContextInstance.SaveChanges();
+            }
         }
     }
 }
