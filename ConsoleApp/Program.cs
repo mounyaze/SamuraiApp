@@ -15,7 +15,7 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
 
-            // AddSamurai();
+            //AddSamurai();
             //GetSamurais("After Add:");
             //InsertMultipleSamurais();
             //QueryFilter();
@@ -25,7 +25,8 @@ namespace ConsoleApp
             //InsertBattle();
             //QueryAndUpdateBattle_Disconnected();
             //InsertNewSamuraiWithQuotes();
-            InsertSamuraiWithManyQuotes();
+            //InsertSamuraiWithManyQuotes();
+            AddQuoteToExistingSamuraiWhileTracked();
             
             Console.Write("Press any key...");
             Console.ReadKey();
@@ -171,6 +172,20 @@ namespace ConsoleApp
             var samurai = _context.Samurais.FirstOrDefault();
             samurai.Quotes.Add(new Quote { Text = "hey there please keep me !!" });
             _context.SaveChanges();
+        }
+        private static void AddQuoteToExistingSamuraiNotTracked(int samuraiId)
+        {
+            var samurai = _context.Samurais.Find(samuraiId);
+            samurai.Quotes.Add(new Quote
+            {
+                Text = "Now that i saved, you will feed me dinner ?"
+            });
+            using (var newContext = new SamuraiContext()) 
+            {
+                newContext.Samurais.Update(samurai);
+                //newContext.Samurais.Attach(samurai);
+                newContext.SaveChanges();
+            }
         }
     }
 }
