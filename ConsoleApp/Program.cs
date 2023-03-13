@@ -14,6 +14,7 @@ namespace ConsoleApp
 
         private static void Main(string[] args)
         {
+            
 
             //AddSamurai();
             //GetSamurais("After Add:");
@@ -26,11 +27,17 @@ namespace ConsoleApp
             //QueryAndUpdateBattle_Disconnected();
             //InsertNewSamuraiWithQuotes();
             //InsertSamuraiWithManyQuotes();
-            AddQuoteToExistingSamuraiWhileTracked();
+            //AddQuoteToExistingSamuraiWhileTracked();
+            //AddQuoteToExistingSamuraiNotTracked(8);
+            //EagerLoadSamuraiWithQuotes();
+            //ProjectSomeProperties();
+            ProjectSamuraisWithQuotes();
+
             
+
             Console.Write("Press any key...");
             Console.ReadKey();
-
+            
         }
 
         private static void InsertMultipleSamurais()
@@ -83,6 +90,7 @@ namespace ConsoleApp
             //var filter = "J%";
             //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, filter));
             var last = _context.Samurais.OrderBy(s => s.Id).LastOrDefault(s => s.Name == name);
+
         }
 
         private static void RetrieveAndUpdateSamurai ()
@@ -178,7 +186,8 @@ namespace ConsoleApp
             var samurai = _context.Samurais.Find(samuraiId);
             samurai.Quotes.Add(new Quote
             {
-                Text = "Now that i saved, you will feed me dinner ?"
+                Text = "Now that i saved, you will feed me dinner ?",
+                SamuraiId = samuraiId
             });
             using (var newContext = new SamuraiContext()) 
             {
@@ -187,5 +196,70 @@ namespace ConsoleApp
                 newContext.SaveChanges();
             }
         }
+        private static void EagerLoadSamuraiWithQuotes()
+        { 
+            var samuraiQuotes = _context.Samurais.Where(s=> s.Name.Contains("Lekbedbed"))
+                                                 .Include(s => s.Quotes).ToList();
+        }
+        private static void ProjectSomeProperties()
+        {
+            var someproperties = _context.Samurais.Select(s=> new { s.Id, s.Name}).ToList();
+            var idsAndNames = _context.Samurais.Select(s => new IdAndName(s.Id, s.Name)).ToList();
+        }
+        private struct IdAndName 
+        {
+            public IdAndName(int id, string name)
+            { 
+                Id = id;
+                Name= name;
+
+            }
+            public int Id;
+            public string Name;
+        }
+        private static void  ProjectSamuraisWithQuotes()
+        {
+            //var somePropertiesWithQuotes = _context.Samurais.Select(s => new { s.Id, s.Name, s.Quotes.Count })
+            //                                                .ToList();
+
+
+            /* var somePropertiesWithQuotes = _context.Samurais
+                 .Select(s => new { s.Id, s.Name, HappyQuotes = s.Quotes.Where(q => q.Text.Contains("nakelek"))})
+                .ToList();
+             var sam = _context.Samurais.Find(somePropertiesWithQuotes[0].Id);
+             sam.Name += " MONSTER";*/
+
+
+
+            var samuraiWithHappyQuotes = _context.Samurais
+                 .Select(s => new {
+                     Samurai = s,
+                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("yal"))
+                     
+                 })
+                  .ToList();
+            samuraiWithHappyQuotes.Reverse();
+           
+            foreach (var i in samuraiWithHappyQuotes)
+            {
+                Console.WriteLine(i.Samurai.Name);
+                Console.WriteLine(" ");
+                foreach (var j in i.HappyQuotes)
+                {
+                    Console.WriteLine(j.Text);
+                }
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
+            }
+
+
+
+
+            //var firstsamurai = samuraiWithHappyQuotes[0].samurai.Name += " the most medlula";
+            
+
+        }
+
     }
 }
+ 
