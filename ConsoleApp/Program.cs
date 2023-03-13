@@ -14,7 +14,7 @@ namespace ConsoleApp
 
         private static void Main(string[] args)
         {
-            
+
 
             //AddSamurai();
             //GetSamurais("After Add:");
@@ -31,7 +31,8 @@ namespace ConsoleApp
             //AddQuoteToExistingSamuraiNotTracked(8);
             //EagerLoadSamuraiWithQuotes();
             //ProjectSomeProperties();
-            ProjectSamuraisWithQuotes();
+            //ProjectSamuraisWithQuotes();
+            FilteringWithRelatedData();
 
             
 
@@ -232,9 +233,9 @@ namespace ConsoleApp
 
 
             var samuraiWithHappyQuotes = _context.Samurais
-                 .Select(s => new {
+                 .Select( s => new {
                      Samurai = s,
-                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("yal"))
+                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("yal") )
                      
                  })
                   .ToList();
@@ -259,7 +260,40 @@ namespace ConsoleApp
             
 
         }
+        private static void ExplicitLoadQuotes()
+        {
+             var samurai = _context.Samurais.FirstOrDefault(s => s.Name.Contains("Mounya"));
+            _context.Entry(samurai).Collection(s => s.Quotes).Load();
+            _context.Entry(samurai).Reference(s => s.Horse).Load();
+            
 
+        }
+        private static void FilteringWithRelatedData()
+        {
+
+            var samuraiWithHappyQuotes = _context.Samurais
+                 .Where(s => s.Quotes.Any(q => q.Text.Contains("naklek")))
+                 .Select(s => new {
+                     samurai = s,
+                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("naklek"))})
+                  .ToList();
+
+            //var samurais = _context.Samurais
+              //       .Where(s => s.Quotes.Any(q => q.Text.Contains("naklek")))
+                //     .ToList();
+            foreach (var i in samuraiWithHappyQuotes)
+            {
+                Console.WriteLine(i.samurai.Name);
+                Console.WriteLine(" ");
+                foreach (var j in i.HappyQuotes)
+                {
+                    Console.WriteLine(j.Text);
+                }
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
+            }
+
+        }
     }
 }
  
