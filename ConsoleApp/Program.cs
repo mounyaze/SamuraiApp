@@ -32,13 +32,16 @@ namespace ConsoleApp
             //EagerLoadSamuraiWithQuotes();
             //ProjectSomeProperties();
             //ProjectSamuraisWithQuotes();
-            FilteringWithRelatedData();
+            //FilteringWithRelatedData();
+            //ModifyingRelatedDataTracked();
+            JoinBattleAndSamurain();
+            EnlistSamuraiIntoBattle();
 
-            
+
 
             Console.Write("Press any key...");
             Console.ReadKey();
-            
+
         }
 
         private static void InsertMultipleSamurais()
@@ -94,7 +97,7 @@ namespace ConsoleApp
 
         }
 
-        private static void RetrieveAndUpdateSamurai ()
+        private static void RetrieveAndUpdateSamurai()
         {
             var horse = new Horse { Name = "aserdun" };
             var samurai = _context.Samurais.FirstOrDefault();
@@ -111,13 +114,13 @@ namespace ConsoleApp
             samurai.Name += " sama";
             var clan = new Clan { ClanName = "shi clan 3awd" };
             var horse = new Horse { Name = "horsu" };
-            _context.Samurais.Add(new Samurai { Name = "Kikuchiyo", Clan= clan , Horse=horse});
+            _context.Samurais.Add(new Samurai { Name = "Kikuchiyo", Clan = clan, Horse = horse });
             _context.SaveChanges();
         }
         private static void RetrieveAndDeleteASamurai()
         {
             var samurai = _context.Samurais.Find(2);
-            
+
             _context.Samurais.Remove(samurai);
             _context.SaveChanges();
         }
@@ -132,8 +135,8 @@ namespace ConsoleApp
             _context.SaveChanges();
         }
         private static void QueryAndUpdateBattle_Disconnected()
-        
-        { 
+
+        {
             var battle = _context.Battles.AsNoTracking().FirstOrDefault();
             battle.EndDate = new DateTime(2024, 05, 12);
             using (var newContextInstance = new SamuraiContext())
@@ -151,8 +154,8 @@ namespace ConsoleApp
                 Name = "Mounya Zekraoui",
                 Clan = clan,
                 Horse = horse,
-                Quotes= new List<Quote> { 
-                    new Quote {Text="Nari u nsheddek naklek"} 
+                Quotes = new List<Quote> {
+                    new Quote {Text="Nari u nsheddek naklek"}
                 }
             };
             _context.Samurais.Add(samurai);
@@ -190,7 +193,7 @@ namespace ConsoleApp
                 Text = "Now that i saved, you will feed me dinner ?",
                 SamuraiId = samuraiId
             });
-            using (var newContext = new SamuraiContext()) 
+            using (var newContext = new SamuraiContext())
             {
                 newContext.Samurais.Update(samurai);
                 //newContext.Samurais.Attach(samurai);
@@ -198,27 +201,27 @@ namespace ConsoleApp
             }
         }
         private static void EagerLoadSamuraiWithQuotes()
-        { 
-            var samuraiQuotes = _context.Samurais.Where(s=> s.Name.Contains("Lekbedbed"))
+        {
+            var samuraiQuotes = _context.Samurais.Where(s => s.Name.Contains("Lekbedbed"))
                                                  .Include(s => s.Quotes).ToList();
         }
         private static void ProjectSomeProperties()
         {
-            var someproperties = _context.Samurais.Select(s=> new { s.Id, s.Name}).ToList();
+            var someproperties = _context.Samurais.Select(s => new { s.Id, s.Name }).ToList();
             var idsAndNames = _context.Samurais.Select(s => new IdAndName(s.Id, s.Name)).ToList();
         }
-        private struct IdAndName 
+        private struct IdAndName
         {
             public IdAndName(int id, string name)
-            { 
+            {
                 Id = id;
-                Name= name;
+                Name = name;
 
             }
             public int Id;
             public string Name;
         }
-        private static void  ProjectSamuraisWithQuotes()
+        private static void ProjectSamuraisWithQuotes()
         {
             //var somePropertiesWithQuotes = _context.Samurais.Select(s => new { s.Id, s.Name, s.Quotes.Count })
             //                                                .ToList();
@@ -233,14 +236,15 @@ namespace ConsoleApp
 
 
             var samuraiWithHappyQuotes = _context.Samurais
-                 .Select( s => new {
+                 .Select(s => new
+                 {
                      Samurai = s,
-                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("yal") )
-                     
+                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("yal"))
+
                  })
                   .ToList();
             samuraiWithHappyQuotes.Reverse();
-           
+
             foreach (var i in samuraiWithHappyQuotes)
             {
                 Console.WriteLine(i.Samurai.Name);
@@ -257,15 +261,15 @@ namespace ConsoleApp
 
 
             //var firstsamurai = samuraiWithHappyQuotes[0].samurai.Name += " the most medlula";
-            
+
 
         }
         private static void ExplicitLoadQuotes()
         {
-             var samurai = _context.Samurais.FirstOrDefault(s => s.Name.Contains("Mounya"));
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name.Contains("Mounya"));
             _context.Entry(samurai).Collection(s => s.Quotes).Load();
             _context.Entry(samurai).Reference(s => s.Horse).Load();
-            
+
 
         }
         private static void FilteringWithRelatedData()
@@ -273,14 +277,16 @@ namespace ConsoleApp
 
             var samuraiWithHappyQuotes = _context.Samurais
                  .Where(s => s.Quotes.Any(q => q.Text.Contains("naklek")))
-                 .Select(s => new {
+                 .Select(s => new
+                 {
                      samurai = s,
-                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("naklek"))})
+                     HappyQuotes = s.Quotes.Where(q => q.Text.Contains("naklek"))
+                 })
                   .ToList();
 
             //var samurais = _context.Samurais
-              //       .Where(s => s.Quotes.Any(q => q.Text.Contains("naklek")))
-                //     .ToList();
+            //       .Where(s => s.Quotes.Any(q => q.Text.Contains("naklek")))
+            //     .ToList();
             foreach (var i in samuraiWithHappyQuotes)
             {
                 Console.WriteLine(i.samurai.Name);
@@ -292,8 +298,36 @@ namespace ConsoleApp
                 Console.WriteLine(" ");
                 Console.WriteLine(" ");
             }
-
         }
+        private static void ModifyingRelatedDataTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes).FirstOrDefault(s => s.Id == 8);
+            samurai.Quotes[0].Text = "And that with pretty nails";
+            _context.Quotes.Remove(samurai.Quotes[2]);
+            //_context.Quotes.Remove(samurai.Quotes[1]);
+            _context.SaveChanges();
+        }
+        private static void JoinBattleAndSamurain()
+        {
+            var sbjoin = new SamuraiBattle { SamuraiId = 20, BattleId = 1 };
+            _context.Add(sbjoin);
+            _context.SaveChanges();
+        }
+        private static void EnlistSamuraiIntoBattle()
+        {
+            var battle = _context.Battles.Find(1);
+            battle.samuraiBattles.Add( new SamuraiBattle { SamuraiId =21 });
+            _context.SaveChanges();
+        }
+
+        private static void RemoveJoin()
+        {
+
+            var join = new SamuraiBattle { SamuraiId = 3, BattleId = 1 };
+            _context.Remove(join);
+            _context.SaveChanges(); 
+        }
+
     }
 }
  
