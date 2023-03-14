@@ -316,7 +316,7 @@ namespace ConsoleApp
         private static void EnlistSamuraiIntoBattle()
         {
             var battle = _context.Battles.Find(1);
-            battle.samuraiBattles.Add( new SamuraiBattle { SamuraiId =21 });
+            battle.samuraiBattles.Add(new SamuraiBattle { SamuraiId = 21 });
             _context.SaveChanges();
         }
 
@@ -325,7 +325,24 @@ namespace ConsoleApp
 
             var join = new SamuraiBattle { SamuraiId = 3, BattleId = 1 };
             _context.Remove(join);
-            _context.SaveChanges(); 
+            _context.SaveChanges();
+        }
+        private static void GetSamuraiWithBattles()
+        {
+            var samuraiWithBattle = _context.Samurais
+                .Include(b => b.SamuraiBattles)
+                .ThenInclude(sb => sb.Battle)
+                .FirstOrDefault(Samurai=>Samurai.Id==20);
+
+            var samuraiWithBattleCleaner = _context.Samurais.Where(s => s.Id == 20)
+                .Select(s => new
+                {
+                    samurai = s,
+                    battled = s.SamuraiBattles.Select(sb => sb.Battle)
+                })
+                .FirstOrDefault();
+                 
+
         }
 
     }

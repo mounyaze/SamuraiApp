@@ -38,7 +38,7 @@ namespace SamuraiApp.Data
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(s => new { s.SamuraiId, s.BattleId });
             modelBuilder.Entity<Horse>().ToTable("Horses");
-            modelBuilder.Entity<Samurai>().HasMany(s => s.Quotes).WithOne(q => q.Samurai);
+
         }
 
     }
