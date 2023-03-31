@@ -16,7 +16,7 @@ namespace ConsoleApp
         {
 
 
-            //AddSamurai();
+           // AddSamurai();
             //GetSamurais("After Add:");
             //InsertMultipleSamurais();
             //QueryFilter();
@@ -34,8 +34,8 @@ namespace ConsoleApp
             //ProjectSamuraisWithQuotes();
             //FilteringWithRelatedData();
             //ModifyingRelatedDataTracked();
-            JoinBattleAndSamurain();
-            EnlistSamuraiIntoBattle();
+           // JoinBattleAndSamurain();
+           // EnlistSamuraiIntoBattle();
 
 
 
@@ -129,7 +129,7 @@ namespace ConsoleApp
             _context.Battles.Add(new Battle
             {
                 Name = "Battle of PFE",
-                StatDate = new DateTime(2023, 03, 01),
+                StartDate = new DateTime(2023, 03, 01),
                 EndDate = new DateTime(2023, 07, 31)
             });
             _context.SaveChanges();
@@ -309,7 +309,7 @@ namespace ConsoleApp
         }
         private static void JoinBattleAndSamurain()
         {
-            var sbjoin = new SamuraiBattle { SamuraiId = 20, BattleId = 1 };
+            var sbjoin = new SamuraiBattle { SamuraiId = 5, BattleId = 1 };
             _context.Add(sbjoin);
             _context.SaveChanges();
         }

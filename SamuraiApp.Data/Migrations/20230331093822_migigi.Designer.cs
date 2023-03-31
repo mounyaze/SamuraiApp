@@ -12,8 +12,8 @@ using SamuraiApp.Data;
 namespace SamuraiApp.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    [Migration("20230309143952_newrelashionships")]
-    partial class newrelashionships
+    [Migration("20230331093822_migigi")]
+    partial class migigi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,7 +40,7 @@ namespace SamuraiApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StatDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -77,10 +77,13 @@ namespace SamuraiApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SamuraId")
+                    b.Property<int>("SamuraiId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SamuraiId")
+                        .IsUnique();
 
                     b.ToTable("Horses", (string)null);
                 });
@@ -118,9 +121,6 @@ namespace SamuraiApp.Data.Migrations
                     b.Property<int>("ClanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("HorseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -128,8 +128,6 @@ namespace SamuraiApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClanId");
-
-                    b.HasIndex("HorseId");
 
                     b.ToTable("Samurais");
                 });
@@ -147,6 +145,15 @@ namespace SamuraiApp.Data.Migrations
                     b.HasIndex("BattleId");
 
                     b.ToTable("SamuraiBattle");
+                });
+
+            modelBuilder.Entity("SamuraiApp.Domain.Horse", b =>
+                {
+                    b.HasOne("SamuraiApp.Domain.Samurai", null)
+                        .WithOne("Horse")
+                        .HasForeignKey("SamuraiApp.Domain.Horse", "SamuraiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SamuraiApp.Domain.Quote", b =>
@@ -168,15 +175,7 @@ namespace SamuraiApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SamuraiApp.Domain.Horse", "Horse")
-                        .WithMany()
-                        .HasForeignKey("HorseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Clan");
-
-                    b.Navigation("Horse");
                 });
 
             modelBuilder.Entity("SamuraiApp.Domain.SamuraiBattle", b =>
@@ -205,6 +204,9 @@ namespace SamuraiApp.Data.Migrations
 
             modelBuilder.Entity("SamuraiApp.Domain.Samurai", b =>
                 {
+                    b.Navigation("Horse")
+                        .IsRequired();
+
                     b.Navigation("Quotes");
 
                     b.Navigation("SamuraiBattles");

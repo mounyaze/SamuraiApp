@@ -32,7 +32,7 @@ namespace SamuraiApp.Data
             optionsBuilder
                 .UseLoggerFactory(ConsoleLoggerFactory)
                 .EnableSensitiveDataLogging()
-                .UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=SamuraAppData;Trusted_Connection=True;TrustServerCertificate=true;") ;
+                .UseSqlServer("Server=localhost\\SQLEXPRESS01;Initial catalog=SamuraiNewDb;Integrated Security=True;Trusted_Connection=True;TrustServerCertificate=true;") ;
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

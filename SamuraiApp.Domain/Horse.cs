@@ -11,7 +11,7 @@ namespace SamuraiApp.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        [ForeignKey("SamuraiId")]
+        
         public int SamuraiId { get; set; }
 
     }
